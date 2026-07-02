@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jatiprima Handali · Performance Management & Business Intelligence</title>
+    <meta
+      name="description"
+      content="Portofolio Jatiprima Handali — Performance Management & Business Intelligence professional dengan 7+ tahun pengalaman di industri logistik & teknologi."
+    />
+    <style>
+      :root {
+        --bg: #f4f6fa;
+        --surface: #ffffff;
+        --navy: #0f2748;
+        --navy-2: #1b3a66;
+        --text: #1a2230;
+        --muted: #5d6675;
+        --line: #e4e8ef;
+        --accent: #2f6df6;
+        --accent-soft: #eaf1ff;
+        --maxw: 880px;
+        --shadow: 0 1px 3px rgba(16, 33, 64, 0.06), 0 8px 24px rgba(16, 33, 64, 0.06);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Navbar */
+      nav {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        z-index: 20;
+      }
+      .nav-inner {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 15px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: -0.01em;
+        color: var(--navy);
+      }
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.15s;
+      }
+      .nav-links a:hover {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      /* Hero band */
+      .hero {
+        background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: -120px;
+        right: -80px;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, rgba(47, 109, 246, 0.35), transparent 70%);
+        border-radius: 50%;
+      }
+      .hero-inner {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 56px 24px 60px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        position: relative;
+        z-index: 1;
+      }
+      .photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 4px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .hero-text {
+        flex: 1;
+      }
+      .hero h1 {
+        font-size: 2.3rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 4px;
+      }
+      .hero .role {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #aecbff;
+        margin-bottom: 10px;
+      }
+      .hero .sub {
+        color: rgba(255, 255, 255, 0.82);
+        max-width: 520px;
+        margin-bottom: 20px;
+      }
+      .contact-row {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        margin-bottom: 22px;
+      }
+      .contact-row a {
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+      }
+      .contact-row a:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+      .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        background: #fff;
+        color: var(--navy);
+        border-radius: 8px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      }
+      .btn-download:hover {
+        transform: translateY(-2px);
+        text-decoration: none;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+      }
+      .btn-download svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* Stats band */
+      .stats {
+        max-width: var(--maxw);
+        margin: -34px auto 0;
+        padding: 0 24px;
+        position: relative;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .stat .num {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: -0.02em;
+      }
+      .stat .label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 2px;
+      }
+
+      /* Content */
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      section {
+        padding: 44px 0 8px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 30px 32px;
+        box-shadow: var(--shadow);
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--navy);
+        margin-bottom: 20px;
+      }
+      .section-title::before {
+        content: "";
+        width: 22px;
+        height: 3px;
+        border-radius: 2px;
+        background: var(--accent);
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 1.04rem;
+      }
+
+      /* Highlights */
+      .highlights {
+        list-style: none;
+        display: grid;
+        gap: 13px;
+      }
+      .highlights li {
+        position: relative;
+        padding-left: 28px;
+      }
+      .highlights li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 4px;
+      }
+
+      /* Tags */
+      .group + .group {
+        margin-top: 24px;
+      }
+      .group h3 {
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        padding: 6px 13px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: #1f51c9;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+      .tag.tech {
+        background: #eef1f6;
+        color: var(--navy);
+      }
+
+      /* Experience */
+      .job {
+        padding-left: 22px;
+        border-left: 2px solid var(--line);
+        position: relative;
+        padding-bottom: 28px;
+      }
+      .job:last-child {
+        padding-bottom: 0;
+      }
+      .job::before {
+        content: "";
+        position: absolute;
+        left: -7px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 2px solid var(--surface);
+      }
+      .job-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .job h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+      .job .company {
+        color: var(--accent);
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      .job .period {
+        color: var(--muted);
+        font-size: 0.84rem;
+        white-space: nowrap;
+        background: var(--bg);
+        padding: 3px 10px;
+        border-radius: 999px;
+      }
+      .job ul {
+        list-style: none;
+        margin-top: 12px;
+        display: grid;
+        gap: 7px;
+      }
+      .job ul li {
+        position: relative;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .job ul li::before {
+        content: "–";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* Two column */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .block h3 {
+        font-size: 1.02rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .block .muted {
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+      .lang-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 0.94rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .lang-row:last-child {
+        border-bottom: none;
+      }
+      .lang-row span:last-child {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 48px;
+        background: var(--navy);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 36px 24px;
+        text-align: center;
+        font-size: 0.88rem;
+      }
+      .footer-links {
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        color: #aecbff;
+        font-weight: 500;
+      }
+
+      @media (max-width: 700px) {
+        .nav-links {
+          display: none;
+        }
+        .hero-inner {
+          flex-direction: column;
+          text-align: center;
+          padding: 44px 24px 54px;
+        }
+        .contact-row {
+          justify-content: center;
+        }
+        .hero h1 {
+          font-size: 1.85rem;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Print */
+      @media print {
+        nav,
+        .btn-download,
+        .footer-links,
+        .hero::after {
+          display: none;
+        }
+        body {
+          background: #fff;
+          font-size: 11pt;
+        }
+        .hero {
+          background: var(--navy) !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .card,
+        .stat {
+          box-shadow: none;
+        }
+        @page {
+          margin: 1.2cm;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <span class="logo">Jatiprima Handali</span>
+        <ul class="nav-links">
+          <li><a href="#profil">Profil</a></li>
+          <li><a href="#pencapaian">Pencapaian</a></li>
+          <li><a href="#keahlian">Keahlian</a></li>
+          <li><a href="#pengalaman">Pengalaman</a></li>
+          <li><a href="#kontak">Kontak</a></li>
+          <li><a href="todo.html">To-Do</a></li>
+          <li><a href="flow.html">Flow</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-inner">
+        <img class="photo" src="qwe.png" alt="Foto Jatiprima Handali" />
+        <div class="hero-text">
+          <h1>Jatiprima Handali</h1>
+          <p class="role">Performance Management &amp; Business Intelligence</p>
+          <p class="sub">
+            7+ tahun pengalaman mendorong operational excellence di industri
+            logistik dan teknologi.
+          </p>
+          <div class="contact-row">
+            <a href="tel:+6282320257013">+62 823 2025 7013</a>
+            <a href="mailto:jatiprimahandali17@gmail.com">jatiprimahandali17@gmail.com</a>
+            <a href="https://linkedin.com/in/jatiprima-handali" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+          <a class="btn-download" href="Resume_Jatiprima_Handali_CV.pdf" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download CV
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat"><div class="num">7+</div><div class="label">Tahun pengalaman</div></div>
+      <div class="stat"><div class="num">140+</div><div class="label">Distribution Centers</div></div>
+      <div class="stat"><div class="num">5</div><div class="label">Region operasional</div></div>
+      <div class="stat"><div class="num">11</div><div class="label">Anggota tim</div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <section id="profil" class="wrap">
+      <div class="card">
+        <h2 class="section-title">Profil</h2>
+        <p class="lead">
+          Performance Management &amp; Business Intelligence professional dengan
+          7+ tahun pengalaman mendorong operational excellence di industri logistik
+          dan teknologi. Saat ini memimpin inisiatif performance management berskala
+          nasional yang mencakup lebih dari 140 Distribution Center di 5 region
+          operasional. Berpengalaman dalam KPI Governance, Business Intelligence,
+          Operational Excellence, Executive Reporting, dan Continuous Improvement
+          menggunakan BigQuery, SQL, Google Apps Script, Looker Studio, Metabase,
+          serta automasi berbasis AI.
+        </p>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHTS -->
+    <section id="pencapaian" class="wrap">
+      <div class="card">
+        <h2 class="section-title">Pencapaian Utama</h2>
+        <ul class="highlights">
+          <li>Memimpin Performance Management nasional di 140+ Distribution Center dan 5 region.</li>
+          <li>Mengelola 11 anggota tim (6 direct reports dan 5 functional reports).</li>
+          <li>Meningkatkan pencapaian KPI dari sekitar 70% menjadi 90% melalui governance terstruktur dan inisiatif perbaikan.</li>
+          <li>Merancang framework KPI Governance dan executive dashboard yang mendukung pengambilan keputusan operasional.</li>
+          <li>Memimpin inisiatif lintas fungsi melibatkan tim Operations, Planning, Regional, dan Business.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="keahlian" class="wrap">
+      <div class="card">
+        <h2 class="section-title">Keahlian &amp; Teknologi</h2>
+        <div class="group">
+          <h3>Core Expertise</h3>
+          <div class="tags">
+            <span class="tag">KPI Governance</span>
+            <span class="tag">Performance Management</span>
+            <span class="tag">Business Intelligence</span>
+            <span class="tag">Operational Excellence</span>
+            <span class="tag">Continuous Improvement</span>
+            <span class="tag">Executive Reporting</span>
+            <span class="tag">Root Cause Analysis</span>
+            <span class="tag">Stakeholder Management</span>
+            <span class="tag">Team Leadership</span>
+          </div>
+        </div>
+        <div class="group">
+          <h3>Technology Stack</h3>
+          <div class="tags">
+            <span class="tag tech">BigQuery</span>
+            <span class="tag tech">SQL</span>
+            <span class="tag tech">Google Apps Script</span>
+            <span class="tag tech">Looker Studio</span>
+            <span class="tag tech">Metabase</span>
+            <span class="tag tech">Microsoft Excel (Advanced)</span>
+            <span class="tag tech">Google Sheets</span>
+            <span class="tag tech">AI Productivity Tools</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="pengalaman" class="wrap">
+      <div class="card">
+        <h2 class="section-title">Pengalaman Profesional</h2>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <h3>Performance Management &amp; Business Improvement Associate</h3>
+              <div class="company">SPX (Shopee Express)</div>
+            </div>
+            <div class="period">Sep 2023 – Sekarang</div>
+          </div>
+          <ul>
+            <li>Memimpin Performance Management nasional mencakup 140+ Distribution Center di 5 region operasional.</li>
+            <li>Mengelola 2 Coordinator dan 4 Support Specialist secara langsung, serta functional leadership atas 2 Coordinator dan 3 Support Specialist.</li>
+            <li>Merancang framework KPI Governance, sistem monitoring performa, dan executive dashboard.</li>
+            <li>Mengembangkan solusi pelaporan otomatis dengan BigQuery, SQL, Google Apps Script, Looker Studio, dan Metabase.</li>
+            <li>Melakukan performance review, benchmarking, dan root cause analysis untuk mendorong operational excellence.</li>
+            <li>Berkolaborasi dengan senior stakeholder dalam inisiatif business improvement berskala nasional.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <h3>Business Intelligence Associate</h3>
+              <div class="company">Ritase.com</div>
+            </div>
+            <div class="period">Jan 2022 – Sep 2022</div>
+          </div>
+          <ul>
+            <li>Mengembangkan dashboard analitik untuk operasi Marketplace, SaaS, dan Transporter.</li>
+            <li>Mengelola pipeline pelaporan otomatis dan menyajikan insight bisnis strategis.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <h3>Data Administrator</h3>
+              <div class="company">Ritase.com</div>
+            </div>
+            <div class="period">Apr 2019 – Des 2021</div>
+          </div>
+          <ul>
+            <li>Mengelola master data operasional, pelaporan, pengembangan dashboard, dan jaminan kualitas data.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION & LANGUAGES -->
+    <section class="wrap">
+      <div class="two-col">
+        <div class="card block">
+          <h2 class="section-title">Pendidikan</h2>
+          <h3>S1 Pendidikan Teknik Elektro</h3>
+          <p class="muted">Universitas Pendidikan Indonesia</p>
+          <p class="muted">Lulus September 2018</p>
+        </div>
+        <div class="card block">
+          <h2 class="section-title">Bahasa</h2>
+          <div class="lang-row"><span>Bahasa Indonesia</span><span>Fluent</span></div>
+          <div class="lang-row"><span>English</span><span>Professional Working</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="kontak">
+      <div class="footer-links">
+        <a href="mailto:jatiprimahandali17@gmail.com">Email</a>
+        <a href="tel:+6282320257013">Telepon</a>
+        <a href="https://linkedin.com/in/jatiprima-handali" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      © 2026 Jatiprima Handali
+    </footer>
+  </body>
+</html>

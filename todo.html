@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List · Jatiprima Handali</title>
+    <style>
+      :root {
+        --bg: #f4f6fa;
+        --surface: #ffffff;
+        --navy: #0f2748;
+        --navy-2: #1b3a66;
+        --text: #1a2230;
+        --muted: #5d6675;
+        --line: #e4e8ef;
+        --accent: #2f6df6;
+        --accent-soft: #eaf1ff;
+        --danger: #e53e3e;
+        --danger-soft: #fff5f5;
+        --success: #2d8a4e;
+        --maxw: 960px;
+        --shadow: 0 1px 3px rgba(16,33,64,.06), 0 8px 24px rgba(16,33,64,.06);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: "Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+        background: var(--bg); color: var(--text);
+        line-height: 1.65; font-size: 16px;
+        -webkit-font-smoothing: antialiased; min-height: 100vh;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      /* ── Navbar ── */
+      nav {
+        position: sticky; top: 0;
+        background: rgba(255,255,255,.9); backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line); z-index: 20;
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 15px 24px;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .logo { font-weight: 700; font-size: 1rem; letter-spacing: -.01em; color: var(--navy); }
+      .nav-links { display: flex; gap: 22px; list-style: none; }
+      .nav-links a { color: var(--muted); font-size: .9rem; font-weight: 500; transition: color .15s; }
+      .nav-links a:hover, .nav-links a.active { color: var(--accent); text-decoration: none; }
+
+      /* ── Hero ── */
+      .hero {
+        background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+        color: #fff; position: relative; overflow: hidden;
+      }
+      .hero::after {
+        content: ""; position: absolute; top: -80px; right: -60px;
+        width: 260px; height: 260px;
+        background: radial-gradient(circle, rgba(47,109,246,.35), transparent 70%);
+        border-radius: 50%;
+      }
+      .hero-inner {
+        max-width: var(--maxw); margin: 0 auto;
+        padding: 36px 24px 40px; position: relative; z-index: 1;
+      }
+      .hero h1 { font-size: 1.7rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 4px; }
+      .hero p  { color: rgba(255,255,255,.75); font-size: .95rem; }
+
+      /* ── Layout ── */
+      .wrap {
+        max-width: var(--maxw); margin: 0 auto;
+        padding: 28px 24px 60px;
+        display: flex; flex-direction: column; gap: 18px;
+      }
+      .card {
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 14px; padding: 24px 26px; box-shadow: var(--shadow);
+      }
+      .section-title {
+        display: flex; align-items: center; gap: 10px;
+        font-size: .8rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .08em;
+        color: var(--navy); margin-bottom: 18px;
+      }
+      .section-title::before {
+        content: ""; width: 20px; height: 3px;
+        border-radius: 2px; background: var(--accent); flex-shrink: 0;
+      }
+
+      /* ── Add Form ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 180px 160px 160px auto;
+        gap: 10px; align-items: end;
+      }
+      .form-field { display: flex; flex-direction: column; gap: 5px; }
+      .form-field label { font-size: .8rem; font-weight: 600; color: var(--muted); }
+      .form-field input,
+      .form-field select {
+        padding: 10px 14px;
+        border: 1.5px solid var(--line); border-radius: 9px;
+        font-size: .95rem; font-family: inherit; color: var(--text);
+        background: var(--bg); outline: none;
+        transition: border-color .15s, box-shadow .15s;
+      }
+      .form-field input:focus,
+      .form-field select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(47,109,246,.12);
+        background: #fff;
+      }
+      .form-field input::placeholder { color: var(--muted); }
+      .form-field select { cursor: pointer; }
+
+      .form-error {
+        margin-top: 10px; padding: 9px 14px;
+        background: var(--danger-soft); border: 1px solid #fecaca;
+        border-radius: 8px; color: var(--danger); font-size: .87rem; display: none;
+      }
+
+      /* ── Buttons ── */
+      .btn-primary {
+        padding: 10px 20px; background: var(--accent); color: #fff;
+        border: none; border-radius: 9px; font-size: .92rem; font-weight: 600;
+        font-family: inherit; cursor: pointer;
+        transition: background .15s, transform .1s, box-shadow .15s;
+        display: flex; align-items: center; gap: 6px;
+        white-space: nowrap; align-self: end; height: 42px;
+      }
+      .btn-primary:hover { background: #1a5ae8; box-shadow: 0 4px 14px rgba(47,109,246,.35); }
+      .btn-primary:active { transform: scale(.97); }
+      .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+      .btn-icon {
+        width: 30px; height: 30px; border: none; border-radius: 7px;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: background .15s, color .15s; flex-shrink: 0;
+        background: transparent; color: var(--muted);
+        padding: 0;
+      }
+      .btn-icon:hover { background: var(--danger-soft); color: var(--danger); }
+      .btn-icon.save:hover  { background: #e8f5e9; color: var(--success); }
+      .btn-icon.cancel:hover { background: var(--bg); color: var(--text); }
+
+      /* ── Filter bar ── */
+      .filter-bar {
+        display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      }
+      .filter-bar input,
+      .filter-bar select {
+        padding: 8px 13px;
+        border: 1.5px solid var(--line); border-radius: 9px;
+        font-size: .9rem; font-family: inherit; color: var(--text);
+        background: var(--bg); outline: none;
+        transition: border-color .15s, box-shadow .15s;
+      }
+      .filter-bar input { flex: 1; min-width: 160px; }
+      .filter-bar input:focus,
+      .filter-bar select:focus {
+        border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47,109,246,.1);
+        background: #fff;
+      }
+      .filter-bar input::placeholder { color: var(--muted); }
+      .filter-bar select { cursor: pointer; }
+      .btn-clear-filter {
+        padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 9px;
+        background: var(--bg); color: var(--muted); font-size: .87rem;
+        font-family: inherit; cursor: pointer;
+        transition: border-color .15s, color .15s;
+        white-space: nowrap;
+      }
+      .btn-clear-filter:hover { border-color: var(--accent); color: var(--accent); }
+
+      /* ── Stats ── */
+      .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; }
+      .stat-pill {
+        display: flex; align-items: center; gap: 7px;
+        background: var(--bg); border: 1px solid var(--line);
+        border-radius: 999px; padding: 6px 14px;
+        font-size: .85rem; color: var(--muted);
+      }
+      .stat-pill .count { font-weight: 700; color: var(--navy); }
+      .stat-pill.done .count      { color: var(--success); }
+      .stat-pill.high-count .count { color: #c0392b; }
+
+      /* ── Table ── */
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+      thead th {
+        text-align: left; padding: 10px 14px;
+        font-size: .75rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: var(--muted); border-bottom: 2px solid var(--line); white-space: nowrap;
+      }
+      thead th:first-child { padding-left: 4px; width: 40px; }
+      thead th:last-child  { width: 48px; }
+      tbody tr {
+        border-bottom: 1px solid var(--line);
+        transition: background .1s; animation: fadeIn .18s ease;
+      }
+      tbody tr:last-child  { border-bottom: none; }
+      tbody tr:hover       { background: #fafbfd; }
+      tbody tr.is-done     { opacity: .6; }
+      tbody td { padding: 11px 14px; vertical-align: middle; }
+      tbody td:first-child { padding-left: 4px; }
+      tbody td:last-child  { padding-right: 6px; }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ── Checkbox ── */
+      .todo-check {
+        width: 19px; height: 19px; flex-shrink: 0;
+        appearance: none; -webkit-appearance: none;
+        border: 2px solid var(--line); border-radius: 5px;
+        cursor: pointer; position: relative;
+        transition: border-color .15s, background .15s;
+        background: #fff; display: block;
+      }
+      .todo-check:hover   { border-color: var(--accent); }
+      .todo-check:checked { background: var(--accent); border-color: var(--accent); }
+      .todo-check:checked::after {
+        content: ""; position: absolute;
+        left: 3px; top: 1px; width: 9px; height: 5px;
+        border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+        transform: rotate(-45deg);
+      }
+      .todo-check:disabled { opacity: .5; cursor: wait; }
+
+      /* ── Task cell ── */
+      .task-text {
+        word-break: break-word; cursor: pointer;
+        border-radius: 5px; padding: 2px 4px; margin: -2px -4px;
+        transition: background .12s;
+      }
+      .task-text:hover { background: var(--accent-soft); }
+      .task-text.done  { text-decoration: line-through; color: var(--muted); }
+
+      .inline-edit-wrap {
+        display: flex; align-items: center; gap: 6px;
+      }
+      .inline-input {
+        flex: 1; padding: 5px 9px;
+        border: 1.5px solid var(--accent); border-radius: 7px;
+        font-size: .9rem; font-family: inherit; color: var(--text);
+        outline: none; box-shadow: 0 0 0 3px rgba(47,109,246,.12);
+        background: #fff;
+      }
+
+      /* ── Badges ── */
+      .badge {
+        display: inline-block; padding: 3px 10px;
+        border-radius: 999px; font-size: .78rem; font-weight: 600; white-space: nowrap;
+      }
+      .badge-rendah   { background: #e8f5e9; color: #2e7d32; }
+      .badge-sedang   { background: #fff3e0; color: #e65100; }
+      .badge-tinggi   { background: #fdecea; color: #c62828; }
+      .badge-kategori { background: var(--accent-soft); color: #1f51c9; font-weight: 500; font-size: .8rem; }
+      .badge-empty    { color: var(--muted); font-size: .82rem; font-style: italic; }
+
+      /* ── States ── */
+      .state-msg {
+        text-align: center; padding: 44px 0 24px; color: var(--muted);
+        font-size: .95rem; display: flex; flex-direction: column; align-items: center; gap: 12px;
+      }
+      .state-msg svg { opacity: .3; }
+      .spinner {
+        width: 22px; height: 22px;
+        border: 2.5px solid rgba(47,109,246,.2); border-top-color: var(--accent);
+        border-radius: 50%; animation: spin .7s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── Toast ── */
+      #toast {
+        position: fixed; bottom: 24px; right: 24px;
+        background: var(--navy); color: #fff;
+        padding: 11px 18px; border-radius: 9px;
+        font-size: .88rem; font-weight: 500;
+        box-shadow: 0 8px 24px rgba(15,39,72,.3);
+        opacity: 0; transform: translateY(10px);
+        transition: opacity .22s, transform .22s;
+        z-index: 100; pointer-events: none; max-width: 300px;
+      }
+      #toast.show  { opacity: 1; transform: translateY(0); }
+      #toast.error { background: var(--danger); }
+
+      /* ── Footer ── */
+      footer {
+        background: var(--navy); color: rgba(255,255,255,.7);
+        padding: 28px 24px; text-align: center; font-size: .88rem;
+      }
+      .footer-links {
+        display: flex; gap: 18px; justify-content: center;
+        margin-bottom: 10px; flex-wrap: wrap;
+      }
+      .footer-links a { color: #aecbff; font-weight: 500; }
+
+      /* ── Responsive ── */
+      @media (max-width: 700px) {
+        .nav-links { display: none; }
+        .hero h1   { font-size: 1.4rem; }
+        .card      { padding: 18px 16px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .btn-primary { width: 100%; justify-content: center; }
+        #toast { left: 14px; right: 14px; bottom: 14px; }
+        thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <div class="nav-inner">
+        <a class="logo" href="index.html">Jatiprima Handali</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Portfolio</a></li>
+          <li><a href="todo.html" class="active">To-Do List</a></li>
+          <li><a href="flow.html">Flow</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-inner">
+        <h1>To-Do List</h1>
+        <p>Kelola tugas harianmu — tersimpan otomatis di cloud.</p>
+      </div>
+    </header>
+
+    <main class="wrap">
+
+      <!-- Add Form -->
+      <div class="card">
+        <h2 class="section-title">Tambah Tugas Baru</h2>
+        <form id="addForm">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="taskInput">Tugas</label>
+              <input type="text" id="taskInput" placeholder="Deskripsikan tugasmu…" autocomplete="off" maxlength="255" required />
+            </div>
+            <div class="form-field">
+              <label for="kategoriInput">Kategori</label>
+              <input type="text" id="kategoriInput" placeholder="Contoh: Pekerjaan" maxlength="60" />
+            </div>
+            <div class="form-field">
+              <label for="prioritasInput">Prioritas</label>
+              <select id="prioritasInput">
+                <option value="Rendah">Rendah</option>
+                <option value="Sedang" selected>Sedang</option>
+                <option value="Tinggi">Tinggi</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="deadlineInput">Deadline</label>
+              <input type="date" id="deadlineInput" />
+            </div>
+            <button type="submit" class="btn-primary" id="addBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Tambah
+            </button>
+          </div>
+        </form>
+        <div class="form-error" id="formError"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar" id="statsBar" style="display:none">
+        <div class="stat-pill"><span>Total</span><span class="count" id="statTotal">0</span></div>
+        <div class="stat-pill done"><span>Selesai</span><span class="count" id="statDone">0</span></div>
+        <div class="stat-pill"><span>Pending</span><span class="count" id="statPending">0</span></div>
+        <div class="stat-pill high-count"><span>Prioritas Tinggi</span><span class="count" id="statHigh">0</span></div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="card">
+        <h2 class="section-title">Semua Tugas</h2>
+
+        <!-- Filter bar -->
+        <div class="filter-bar" id="filterBar" style="display:none; margin-bottom:18px;">
+          <input type="text" id="searchInput" placeholder="Cari tugas…" />
+          <select id="filterPrioritas">
+            <option value="">Semua Prioritas</option>
+            <option value="Tinggi">Tinggi</option>
+            <option value="Sedang">Sedang</option>
+            <option value="Rendah">Rendah</option>
+          </select>
+          <select id="filterKategori">
+            <option value="">Semua Kategori</option>
+          </select>
+          <select id="filterStatus">
+            <option value="">Semua Status</option>
+            <option value="pending">Pending</option>
+            <option value="done">Selesai</option>
+          </select>
+          <button class="btn-clear-filter" id="btnClearFilter">Reset</button>
+        </div>
+
+        <div id="loadingState" class="state-msg">
+          <div class="spinner"></div>Memuat data…
+        </div>
+        <div id="emptyState" class="state-msg" style="display:none">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          Belum ada tugas. Tambahkan yang pertama di atas!
+        </div>
+        <div id="noResultState" class="state-msg" style="display:none">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Tidak ada tugas yang cocok dengan filter.
+        </div>
+
+        <div class="table-wrap" id="tableWrap" style="display:none">
+          <table>
+            <thead>
+              <tr>
+                <th>Done</th>
+                <th>Tugas</th>
+                <th>Kategori</th>
+                <th>Prioritas</th>
+                <th>Deadline</th>
+                <th>Tanggal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="todoBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="index.html">Portfolio</a>
+        <a href="mailto:jatiprimahandali17@gmail.com">Email</a>
+        <a href="https://linkedin.com/in/jatiprima-handali" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      © 2026 Jatiprima Handali
+    </footer>
+
+    <div id="toast"></div>
+
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+      const SUPABASE_URL  = 'https://hswlcnqwjngncnihnlrr.supabase.co'
+      const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhzd2xjbnF3am5nbmNuaWhubHJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3OTEwNDUsImV4cCI6MjA5ODM2NzA0NX0.vaw37EcJ9LM14NeN2-mrUggLyv_V4YsxN3ZCwgqUtNg'
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+      // ── DOM refs ──────────────────────────────────────────────────────────────
+      const addForm        = document.getElementById('addForm')
+      const taskInput      = document.getElementById('taskInput')
+      const kategoriInput  = document.getElementById('kategoriInput')
+      const prioritasInput = document.getElementById('prioritasInput')
+      const deadlineInput  = document.getElementById('deadlineInput')
+      const addBtn         = document.getElementById('addBtn')
+      const formError      = document.getElementById('formError')
+      const loadingState   = document.getElementById('loadingState')
+      const emptyState     = document.getElementById('emptyState')
+      const noResultState  = document.getElementById('noResultState')
+      const tableWrap      = document.getElementById('tableWrap')
+      const todoBody       = document.getElementById('todoBody')
+      const statsBar       = document.getElementById('statsBar')
+      const statTotal      = document.getElementById('statTotal')
+      const statDone       = document.getElementById('statDone')
+      const statPending    = document.getElementById('statPending')
+      const statHigh       = document.getElementById('statHigh')
+      const filterBar      = document.getElementById('filterBar')
+      const searchInput    = document.getElementById('searchInput')
+      const filterPrioritas = document.getElementById('filterPrioritas')
+      const filterKategori = document.getElementById('filterKategori')
+      const filterStatus   = document.getElementById('filterStatus')
+      const btnClearFilter = document.getElementById('btnClearFilter')
+
+      let todos = []
+
+      // ── Toast ────────────────────────────────────────────────────────────────
+      let toastTimer
+      function showToast(msg, isError = false) {
+        const el = document.getElementById('toast')
+        clearTimeout(toastTimer)
+        el.textContent = msg
+        el.className = 'show' + (isError ? ' error' : '')
+        toastTimer = setTimeout(() => { el.className = '' }, 3000)
+      }
+
+      function showFormError(msg) { formError.textContent = msg; formError.style.display = 'block' }
+      function clearFormError()   { formError.style.display = 'none'; formError.textContent = '' }
+
+      // ── Helpers ──────────────────────────────────────────────────────────────
+      function formatDate(iso) {
+        return new Date(iso).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' })
+      }
+
+      function formatDeadline(dateStr, isDone) {
+        if (!dateStr) return '<span class="badge-empty">—</span>'
+        const [y, m, d] = dateStr.split('-').map(Number)
+        const label = new Date(y, m - 1, d).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' })
+        const todayStr = new Date().toLocaleDateString('en-CA')
+        const overdue = !isDone && dateStr < todayStr
+        return overdue
+          ? `<span class="badge badge-tinggi">${label}</span>`
+          : `<span style="color:var(--muted);font-size:.82rem;white-space:nowrap">${label}</span>`
+      }
+
+      function prioritasBadge(p) {
+        if (!p) return '<span class="badge-empty">—</span>'
+        const cls = { Rendah:'badge-rendah', Sedang:'badge-sedang', Tinggi:'badge-tinggi' }[p] || 'badge-sedang'
+        return `<span class="badge ${cls}">${p}</span>`
+      }
+
+      // SVG icons
+      const icoTrash  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>`
+      const icoCheck  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      const icoX      = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+
+      // ── Filter helpers ───────────────────────────────────────────────────────
+      function getFiltered() {
+        const q   = searchInput.value.trim().toLowerCase()
+        const pri = filterPrioritas.value
+        const kat = filterKategori.value
+        const st  = filterStatus.value
+
+        return todos.filter(t => {
+          if (q   && !t.task.toLowerCase().includes(q)) return false
+          if (pri && t.prioritas !== pri) return false
+          if (kat && t.kategori  !== kat) return false
+          if (st === 'done'    && !t.is_done)  return false
+          if (st === 'pending' &&  t.is_done)  return false
+          return true
+        })
+      }
+
+      function refreshKategoriOptions() {
+        const current = filterKategori.value
+        const cats = [...new Set(todos.map(t => t.kategori).filter(Boolean))].sort()
+        filterKategori.innerHTML = '<option value="">Semua Kategori</option>'
+        cats.forEach(c => {
+          const o = document.createElement('option')
+          o.value = c; o.textContent = c
+          filterKategori.appendChild(o)
+        })
+        filterKategori.value = cats.includes(current) ? current : ''
+      }
+
+      // ── Render ───────────────────────────────────────────────────────────────
+      function renderTable() {
+        todoBody.innerHTML = ''
+
+        if (todos.length === 0) {
+          loadingState.style.display = 'none'
+          emptyState.style.display = 'flex'
+          noResultState.style.display = 'none'
+          tableWrap.style.display = 'none'
+          statsBar.style.display = 'none'
+          filterBar.style.display = 'none'
+          return
+        }
+
+        // Stats (always from full list)
+        statsBar.style.display = 'flex'
+        filterBar.style.display = 'flex'
+        statTotal.textContent   = todos.length
+        statDone.textContent    = todos.filter(t => t.is_done).length
+        statPending.textContent = todos.filter(t => !t.is_done).length
+        statHigh.textContent    = todos.filter(t => t.prioritas === 'Tinggi' && !t.is_done).length
+
+        const filtered = getFiltered()
+
+        if (filtered.length === 0) {
+          emptyState.style.display = 'none'
+          noResultState.style.display = 'flex'
+          tableWrap.style.display = 'none'
+          return
+        }
+
+        emptyState.style.display = 'none'
+        noResultState.style.display = 'none'
+        tableWrap.style.display = 'block'
+
+        const sorted = [...filtered].sort((a, b) => {
+          if (a.is_done !== b.is_done) return a.is_done ? 1 : -1
+          if (a.deadline !== b.deadline) {
+            if (!a.deadline) return 1
+            if (!b.deadline) return -1
+            return a.deadline < b.deadline ? -1 : 1
+          }
+          const order = { Tinggi: 0, Sedang: 1, Rendah: 2 }
+          const pa = order[a.prioritas] ?? 1
+          const pb = order[b.prioritas] ?? 1
+          if (pa !== pb) return pa - pb
+          return new Date(b.created_at) - new Date(a.created_at)
+        })
+
+        sorted.forEach(todo => {
+          const tr = document.createElement('tr')
+          if (todo.is_done) tr.classList.add('is-done')
+          tr.dataset.id = todo.id
+
+          // ─ Checkbox
+          const tdCheck = document.createElement('td')
+          const cb = document.createElement('input')
+          cb.type = 'checkbox'; cb.className = 'todo-check'; cb.checked = todo.is_done
+          cb.addEventListener('change', () => toggleTodo(todo.id, cb.checked, cb))
+          tdCheck.appendChild(cb)
+
+          // ─ Task (inline edit on click)
+          const tdTask = document.createElement('td')
+          const span = document.createElement('span')
+          span.className = 'task-text' + (todo.is_done ? ' done' : '')
+          span.textContent = todo.task
+          span.title = 'Klik untuk mengedit'
+          span.addEventListener('click', () => startInlineEdit(todo.id, tdTask, span))
+          tdTask.appendChild(span)
+
+          // ─ Kategori
+          const tdKat = document.createElement('td')
+          tdKat.innerHTML = todo.kategori
+            ? `<span class="badge badge-kategori">${todo.kategori}</span>`
+            : `<span class="badge-empty">—</span>`
+
+          // ─ Prioritas
+          const tdPri = document.createElement('td')
+          tdPri.innerHTML = prioritasBadge(todo.prioritas)
+
+          // ─ Deadline
+          const tdDeadline = document.createElement('td')
+          tdDeadline.innerHTML = formatDeadline(todo.deadline, todo.is_done)
+
+          // ─ Date
+          const tdDate = document.createElement('td')
+          tdDate.style.cssText = 'color:var(--muted);font-size:.82rem;white-space:nowrap'
+          tdDate.textContent = formatDate(todo.created_at)
+
+          // ─ Delete button
+          const tdAct = document.createElement('td')
+          const delBtn = document.createElement('button')
+          delBtn.className = 'btn-icon'
+          delBtn.title = 'Hapus tugas'
+          delBtn.innerHTML = icoTrash
+          delBtn.addEventListener('click', () => deleteTodo(todo.id, tr))
+          tdAct.appendChild(delBtn)
+
+          tr.append(tdCheck, tdTask, tdKat, tdPri, tdDeadline, tdDate, tdAct)
+          todoBody.appendChild(tr)
+        })
+      }
+
+      // ── Inline edit ──────────────────────────────────────────────────────────
+      function startInlineEdit(id, tdTask, span) {
+        const original = span.textContent
+        const wrap = document.createElement('div')
+        wrap.className = 'inline-edit-wrap'
+
+        const inp = document.createElement('input')
+        inp.className = 'inline-input'
+        inp.value = original
+        inp.maxLength = 255
+
+        const saveBtn = document.createElement('button')
+        saveBtn.type = 'button'
+        saveBtn.className = 'btn-icon save'
+        saveBtn.title = 'Simpan'
+        saveBtn.innerHTML = icoCheck
+
+        const cancelBtn = document.createElement('button')
+        cancelBtn.type = 'button'
+        cancelBtn.className = 'btn-icon cancel'
+        cancelBtn.title = 'Batal'
+        cancelBtn.innerHTML = icoX
+
+        wrap.append(inp, saveBtn, cancelBtn)
+        tdTask.replaceChildren(wrap)
+        inp.focus(); inp.select()
+
+        async function save() {
+          const newTask = inp.value.trim()
+          if (!newTask || newTask === original) { cancel(); return }
+          saveBtn.disabled = true; cancelBtn.disabled = true
+          const { error } = await supabase
+            .from('todos').update({ task: newTask }).eq('id', id)
+          if (error) {
+            showToast('Gagal menyimpan: ' + error.message, true)
+            saveBtn.disabled = false; cancelBtn.disabled = false
+            return
+          }
+          const todo = todos.find(t => t.id === id)
+          if (todo) todo.task = newTask
+          renderTable()
+          showToast('Tugas diperbarui!')
+        }
+
+        function cancel() {
+          tdTask.replaceChildren(span)
+        }
+
+        saveBtn.addEventListener('click', save)
+        cancelBtn.addEventListener('click', cancel)
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter')  { e.preventDefault(); save() }
+          if (e.key === 'Escape') { cancel() }
+        })
+      }
+
+      // ── Delete ───────────────────────────────────────────────────────────────
+      async function deleteTodo(id, tr) {
+        const todo = todos.find(t => t.id === id)
+        const label = todo ? `"${todo.task.slice(0, 40)}"` : 'tugas ini'
+        if (!confirm(`Hapus ${label}?`)) return
+
+        tr.style.opacity = '.4'
+        const { error } = await supabase.from('todos').delete().eq('id', id)
+
+        if (error) {
+          tr.style.opacity = ''
+          showToast('Gagal menghapus: ' + error.message, true)
+          return
+        }
+
+        todos = todos.filter(t => t.id !== id)
+        refreshKategoriOptions()
+        renderTable()
+        showToast('Tugas dihapus.')
+      }
+
+      // ── Load ─────────────────────────────────────────────────────────────────
+      async function loadTodos() {
+        loadingState.style.display = 'flex'
+        tableWrap.style.display = 'none'
+        emptyState.style.display = 'none'
+
+        const { data, error } = await supabase
+          .from('todos').select('*').order('created_at', { ascending: false })
+
+        loadingState.style.display = 'none'
+
+        if (error) {
+          console.error('[Supabase SELECT]', error)
+          loadingState.innerHTML = `<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Gagal memuat: ${error.message}`
+          loadingState.style.display = 'flex'
+          return
+        }
+
+        todos = data || []
+        refreshKategoriOptions()
+        renderTable()
+      }
+
+      // ── Add ──────────────────────────────────────────────────────────────────
+      addForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const task = taskInput.value.trim()
+        if (!task) return
+
+        clearFormError()
+        addBtn.disabled = true
+        addBtn.textContent = 'Menyimpan…'
+
+        const payload = {
+          task,
+          is_done: false,
+          kategori: kategoriInput.value.trim() || null,
+          prioritas: prioritasInput.value,
+          deadline: deadlineInput.value || null,
+        }
+
+        const { data, error } = await supabase
+          .from('todos').insert([payload]).select().single()
+
+        addBtn.disabled = false
+        addBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah`
+
+        if (error) {
+          console.error('[Supabase INSERT]', error)
+          showFormError('Gagal menyimpan: ' + (error.message || JSON.stringify(error)))
+          showToast('Gagal menyimpan tugas', true)
+          return
+        }
+
+        todos.unshift(data)
+        taskInput.value = ''
+        kategoriInput.value = ''
+        prioritasInput.value = 'Sedang'
+        deadlineInput.value = ''
+        refreshKategoriOptions()
+        renderTable()
+        showToast('Tugas berhasil ditambahkan!')
+      })
+
+      // ── Toggle done ──────────────────────────────────────────────────────────
+      async function toggleTodo(id, newValue, cb) {
+        cb.disabled = true
+        const { error } = await supabase
+          .from('todos').update({ is_done: newValue }).eq('id', id)
+        cb.disabled = false
+
+        if (error) {
+          cb.checked = !newValue
+          showToast('Gagal memperbarui: ' + error.message, true)
+          return
+        }
+
+        const todo = todos.find(t => t.id === id)
+        if (todo) todo.is_done = newValue
+        renderTable()
+        showToast(newValue ? 'Tugas selesai!' : 'Tugas dikembalikan ke pending.')
+      }
+
+      // ── Filter events ────────────────────────────────────────────────────────
+      searchInput.addEventListener('input', renderTable)
+      filterPrioritas.addEventListener('change', renderTable)
+      filterKategori.addEventListener('change', renderTable)
+      filterStatus.addEventListener('change', renderTable)
+      btnClearFilter.addEventListener('click', () => {
+        searchInput.value = ''
+        filterPrioritas.value = ''
+        filterKategori.value = ''
+        filterStatus.value = ''
+        renderTable()
+      })
+
+      // ── Init ─────────────────────────────────────────────────────────────────
+      loadTodos()
+    </script>
+  </body>
+</html>
