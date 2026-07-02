@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flow To-Do List · Jatiprima Handali</title>
+    <title>Flow Situs · Jatiprima Handali</title>
     <style>
       :root {
         --bg: #f4f6fa;
@@ -109,14 +109,41 @@
 
     <header class="hero">
       <div class="hero-inner">
-        <h1>Flow To-Do List</h1>
-        <p>Diagram alur aplikasi To-Do List, dari load data sampai tiap aksi user.</p>
+        <h1>Flow Situs</h1>
+        <p>Diagram alur halaman Portfolio dan aplikasi To-Do List di situs ini.</p>
       </div>
     </header>
 
     <main class="wrap">
       <div class="card">
-        <h2 class="section-title">Alur Aplikasi</h2>
+        <h2 class="section-title">Alur Halaman Portfolio (index.html)</h2>
+        <pre class="mermaid">
+flowchart TD
+    A[Visitor buka index.html] --> B["Hero: Nama, kontak singkat, tombol Download CV"]
+    B --> C{Aksi visitor}
+
+    C -- klik nav Profil/Pencapaian/Keahlian/Pengalaman/Kontak --> D["Scroll ke section via anchor #id"]
+    D --> D1[Profil]
+    D --> D2[Pencapaian Utama]
+    D --> D3["Keahlian &amp; Teknologi"]
+    D --> D4[Pengalaman Profesional]
+    D --> D5["Pendidikan &amp; Bahasa"]
+    D --> D6["Kontak (footer)"]
+
+    C -- klik Download CV --> E["Download Resume_Jatiprima_Handali_CV.pdf"]
+    C -- klik Telepon/Email/LinkedIn --> F["Buka aplikasi eksternal: tel: / mailto: / linkedin.com"]
+    D6 --> F
+
+    C -- klik nav To-Do --> G[Navigasi ke todo.html]
+    C -- klik nav Flow --> H[Navigasi ke flow.html]
+        </pre>
+        <div class="note">
+          Halaman ini statis (tanpa JavaScript) — alurnya murni navigasi visitor antar section dan link keluar, bukan pertukaran data.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Alur Aplikasi To-Do List (todo.html)</h2>
         <pre class="mermaid">
 flowchart TD
     A[Buka todo.html] --> B["loadTodos()<br/>SELECT * FROM todos"]
